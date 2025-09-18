@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: livros-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: livrosdb
+    ports:
+      - "5433:5432"   # mapeia porta 5432 no host para 5432 no container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tarefas-net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: livros-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"   # pgAdmin acessível em http://localhost:8081
+    depends_on:
+      - postgres
+    networks:
+      - tarefas-net
+
+volumes:
+  postgres_data:
+
+networks:
+  tarefas-net: {}
