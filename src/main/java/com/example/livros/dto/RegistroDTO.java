@@ -1,34 +1,31 @@
 package com.example.livros.dto;
 
 import com.example.livros.model.Role;
-import com.example.livros.model.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public class UsuarioDTO {
+public class RegistroDTO {
 
-    @NotBlank(message = "O username é obrigatório")
-    private String username;
+    @NotBlank
+    private String nome;
 
-    @NotBlank(message = "O email é obrigatório")
+    @NotBlank
     @Email
     private String email;
 
-    @NotBlank(message = "A senha é obrigatória")
+    @NotBlank
     private String password;
 
-    @NotBlank(message = "O role é obrigatório")
+    @NotBlank
     private String role;
 
-    public UsuarioDTO(Usuario u) {
+    public String getNome() {
+        return nome;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getEmail() {
@@ -41,10 +38,6 @@ public class UsuarioDTO {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRole() {
