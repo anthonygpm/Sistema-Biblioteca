@@ -1,9 +1,13 @@
 package com.example.livros.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
 public class EmprestimoDTO {
 
     @NotBlank(message = "É obrigatório ter um livro para emprestar")
@@ -15,36 +19,4 @@ public class EmprestimoDTO {
     private LocalDate dataEmprestimo;
 
     private LocalDate dataDevolucao;
-
-    public Long getLivroId() {
-        return livroId;
-    }
-
-    public void setLivroId(Long livroId) {
-        this.livroId = livroId;
-    }
-
-    public Long getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Long usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    public LocalDate getDataEmprestimo() {
-        return dataEmprestimo;
-    }
-
-    public void setDataEmprestimo(LocalDate dataEmprestimo) {
-        this.dataEmprestimo = dataEmprestimo;
-    }
-
-    public LocalDate getDataDevolucao() {
-        return dataDevolucao;
-    }
-
-    public void setDataDevolucao(LocalDate dataDevolucao) {
-        this.dataDevolucao = dataDevolucao;
-    }
 }
