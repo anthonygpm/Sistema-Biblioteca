@@ -1,6 +1,6 @@
 package com.example.livros.controller;
 
-import com.example.livros.dto.login.LoginDTO;
+import com.example.livros.dto.login.LoginRequestDTO;
 import com.example.livros.dto.login.LoginResponseDTO;
 import com.example.livros.dto.usuario.UsuarioRequestDTO;
 import com.example.livros.model.Usuario;
@@ -29,8 +29,8 @@ public class AuthController {
     private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDTO dto){
-        var emailPassword = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO dto){
+        var emailPassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
         var authentication = authenticationManager.authenticate(emailPassword);
 
         var token = tokenService.generateToken((Usuario) authentication.getPrincipal());

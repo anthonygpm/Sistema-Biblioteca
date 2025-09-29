@@ -1,5 +1,6 @@
 package com.example.livros.repository;
 
+import com.example.livros.dto.emprestimo.EmprestimoResponseDTO;
 import com.example.livros.model.Emprestimo;
 import org.springframework.data.jpa.repository.JpaRepository;
 

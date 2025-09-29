@@ -1,27 +1,33 @@
 package com.example.livros.controller;
 
+import com.example.livros.dto.emprestimo.EmprestimoResponseDTO;
 import com.example.livros.model.Emprestimo;
 import com.example.livros.services.EmprestimoService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/emprestimos")
 public class EmprestimoController {
 
     private final EmprestimoService emprestimoService;
 
-    public EmprestimoController (EmprestimoService emprestimoService) { this.emprestimoService = emprestimoService; }
-
     @GetMapping
-    public List<Emprestimo> listarTodos() {
-        return emprestimoService.listarTodos();
+    public List<EmprestimoResponseDTO> listarTodos() {
+        return emprestimoService.listarTodos()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Emprestimo buscarPorId(@PathVariable Long id) {
-        return emprestimoService.buscarPorId(id);
+    public EmprestimoResponseDTO buscarPorId(@PathVariable Long id) {
+        Emprestimo emprestimo = emprestimoService.buscarPorId(id);
+        return toDTO(emprestimo);
     }
 
     @PostMapping
@@ -40,12 +46,27 @@ public class EmprestimoController {
     }
 
     @GetMapping("/filtrar-usuario")
-    public List<Emprestimo> buscarPorUsuario(@RequestParam String usuarioNome) {
-        return emprestimoService.buscarPorUsuarioNome(usuarioNome);
+    public List<EmprestimoResponseDTO> buscarPorUsuario(@RequestParam String usuarioNome) {
+        return emprestimoService.buscarPorUsuarioNome(usuarioNome)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/filtrar-livro")
-    public List<Emprestimo> buscarPorLivro(@RequestParam String livroNome) {
-        return emprestimoService.buscarPorLivroNome(livroNome);
+    public List<EmprestimoResponseDTO> buscarPorLivro(@RequestParam String livroNome) {
+        return emprestimoService.buscarPorLivroNome(livroNome)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public EmprestimoResponseDTO toDTO(Emprestimo emprestimo) {
+        return new EmprestimoResponseDTO(
+                emprestimo.getLivro().getId(),
+                emprestimo.getUsuario().getId(),
+                emprestimo.getDataEmprestimo(),
+                emprestimo.getDataDevolucao()
+        );
     }
 }

@@ -1,12 +1,14 @@
 package com.example.livros.controller;
 
-import com.example.livros.dto.AutorDTO;
+import com.example.livros.dto.autor.AutorRequestDTO;
+import com.example.livros.dto.autor.AutorResponseDTO;
 import com.example.livros.model.Autor;
 import com.example.livros.services.AutorService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/autores")
@@ -19,36 +21,52 @@ public class AutorController {
     }
 
     @GetMapping
-    public List<Autor> buscarAutores(){
-        return autorService.listarTodos();
+    public List<AutorResponseDTO> buscarAutores(){
+        return autorService.listarTodos()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Autor buscarPorId(@PathVariable Long id){
-        return autorService.buscarPorId(id);
+    public AutorResponseDTO buscarPorId(@PathVariable Long id){
+        Autor autor = autorService.buscarPorId(id);
+        return toDTO(autor);
     }
 
     @PostMapping
-    public Autor salvar(@RequestBody @Valid AutorDTO dto){
+    public AutorResponseDTO salvar(@RequestBody @Valid AutorRequestDTO dto){
         Autor autor = new Autor();
-        autor.setNome(dto.getNome());
-        autor.setBiografia(dto.getBiografia());
-        autor.setNacionalidade(dto.getNacionalidade());
-        return autorService.salvar(autor);
+        autor.setNome(dto.nome());
+        autor.setBiografia(dto.biografia());
+        autor.setNacionalidade(dto.nacionalidade());
+
+        Autor autorSalvo = autorService.salvar(autor);
+        return toDTO(autorSalvo);
     }
 
     @PutMapping("/{id}")
-    public Autor atualizar(@PathVariable Long id, @RequestBody @Valid AutorDTO dto){
+    public AutorResponseDTO atualizar(@PathVariable Long id, @RequestBody @Valid AutorRequestDTO dto){
         Autor autor = new Autor();
         autor.setId(id);
-        autor.setNome(dto.getNome());
-        autor.setBiografia(dto.getBiografia());
-        autor.setNacionalidade(dto.getNacionalidade());
-        return autorService.atualizar(autor);
+        autor.setNome(dto.nome());
+        autor.setBiografia(dto.biografia());
+        autor.setNacionalidade(dto.nacionalidade());
+
+        Autor autorAtualizado = autorService.atualizar(autor);
+        return toDTO(autorAtualizado);
     }
 
     @DeleteMapping("/{id}")
     public void deletarPorId(@PathVariable Long id){
         autorService.deletarPorId(id);
+    }
+
+    public AutorResponseDTO toDTO(Autor autor){
+        return new AutorResponseDTO(
+                autor.getNome(),
+                autor.getNacionalidade(),
+                autor.getBiografia()
+        );
     }
 }

@@ -1,7 +1,7 @@
 package com.example.livros.controller;
 
-import com.example.livros.dto.Livro.LivroResponseDTO;
-import com.example.livros.dto.Livro.LivroRequestDTO;
+import com.example.livros.dto.livro.LivroRequestDTO;
+import com.example.livros.dto.livro.LivroResponseDTO;
 import com.example.livros.model.Autor;
 import com.example.livros.model.Categoria;
 import com.example.livros.model.Livro;
@@ -9,11 +9,13 @@ import com.example.livros.services.AutorService;
 import com.example.livros.services.CategoriaService;
 import com.example.livros.services.LivroService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/livros")
 public class LivroController {
@@ -21,12 +23,6 @@ public class LivroController {
     private final LivroService livroService;
     private final CategoriaService categoriaService;
     private final AutorService autorService;
-
-    public LivroController(LivroService livroService, AutorService autorService, CategoriaService categoriaService) {
-        this.livroService = livroService;
-        this.categoriaService = categoriaService;
-        this.autorService = autorService;
-    }
 
     @GetMapping
     public List<LivroResponseDTO> listarTodos() {
@@ -60,14 +56,14 @@ public class LivroController {
 
     @PostMapping
     public LivroResponseDTO salvar(@RequestBody @Valid LivroRequestDTO dto) {
-        Categoria categoria = categoriaService.buscarPorId(dto.getCategoriaId());
-        Autor autor = autorService.buscarPorId(dto.getAutorId());
+        Categoria categoria = categoriaService.buscarPorId(dto.categoriaId());
+        Autor autor = autorService.buscarPorId(dto.autorId());
 
         Livro livro = new Livro();
-        livro.setTitulo(dto.getTitulo());
+        livro.setTitulo(dto.titulo());
         livro.setCategoria(categoria);
         livro.setAutor(autor);
-        livro.setAnoPublicacao(dto.getAnoPublicacao());
+        livro.setAnoPublicacao(dto.anoPublicacao());
 
         Livro salvo = livroService.salvar(livro);
         return toDTO(salvo);
@@ -75,15 +71,15 @@ public class LivroController {
 
     @PutMapping("/{id}")
     public LivroResponseDTO atualizar (@PathVariable Long id, @RequestBody @Valid LivroRequestDTO dto) {
-        Categoria categoria = categoriaService.buscarPorId(dto.getCategoriaId());
-        Autor autor =  autorService.buscarPorId(dto.getAutorId());
+        Categoria categoria = categoriaService.buscarPorId(dto.categoriaId());
+        Autor autor =  autorService.buscarPorId(dto.autorId());
 
         Livro livro = new Livro();
         livro.setId(id);
-        livro.setTitulo(dto.getTitulo());
+        livro.setTitulo(dto.titulo());
         livro.setCategoria(categoria);
         livro.setAutor(autor);
-        livro.setAnoPublicacao(dto.getAnoPublicacao());
+        livro.setAnoPublicacao(dto.anoPublicacao());
 
         Livro salvo = livroService.salvar(livro);
         return toDTO(salvo);
