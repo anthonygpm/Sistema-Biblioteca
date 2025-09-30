@@ -3,18 +3,18 @@ package com.example.livros.controller;
 import com.example.livros.dto.usuario.UsuarioResponseDTO;
 import com.example.livros.model.Usuario;
 import com.example.livros.services.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     @GetMapping
     public List<UsuarioResponseDTO> findAll() {

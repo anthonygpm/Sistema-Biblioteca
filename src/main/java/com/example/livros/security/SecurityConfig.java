@@ -66,6 +66,18 @@ public class SecurityConfig {
 
                     .anyRequest().authenticated()
             )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, e) -> {
+                            res.setStatus(401);
+                            res.setContentType("application/json");
+                            res.getWriter().write("{\"erro\": \"Token ausente ou inválido.\"}");
+                        })
+                        .accessDeniedHandler((req, res, e) -> {
+                            res.setStatus(403);
+                            res.setContentType("application/json");
+                            res.getWriter().write("{\"erro\": \"Acesso negado: você não tem permissão para realizar esta operação.\"}");
+                        })
+                )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
